@@ -1,0 +1,9 @@
+view -n datasets
+    view -n StockHistoricalData
+        read -f data/600000.csv -s original
+        back
+    back
+view -n flows
+    view -n StockMarketPrediction
+        view -n DateCleaner
+            process -r original -s dateCleaned -p

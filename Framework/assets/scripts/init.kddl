@@ -1,0 +1,77 @@
+add -t category -n components
+view -n components
+    add -t category -n preprocessing
+    view -n preprocessing
+        add -t category -n cleaner
+        view -n cleaner
+            add -t component -n Date
+            view -n Date
+                assign -p components.preprocessing.cleaner.Date
+                back
+            back
+        add -t category -n indicator
+        view -n indicator
+            add -t component -n MACD
+            view -n MACD
+                assign -p components.preprocessing.indicator.MACD
+                back
+            back
+        add -t category -n combiner
+        view -n combiner
+            add -t component -n Combine
+            view -n Combine
+                assign -p components.preprocessing.combiner.Combine
+                back
+            back
+        back
+    add -t category -n link
+    view -n link
+        add -t category -n pass
+        view -n pass
+            add -t component -n DirectPass
+            view -n DirectPass
+                assign -p components.link.pass.DirectPass
+                back
+            back
+        back
+    back
+add -t category -n datasets
+view -n datasets
+    add -t dataset -n StockHistoricalData
+    view -n StockHistoricalData
+        add -n DATE -f org.supercsv.cellprocessor.ParseDate -l DATE
+        add -n OPEN -f org.supercsv.cellprocessor.ParseDouble -l OPEN
+        add -n HIGH -f org.supercsv.cellprocessor.ParseDouble -l HIGH
+        add -n LOW -f org.supercsv.cellprocessor.ParseDouble -l LOW
+        add -n CLOSE -f org.supercsv.cellprocessor.ParseDouble -l CLOSE
+        add -n AMOUNT -f org.supercsv.cellprocessor.ParseDouble -l AMOUNT
+        add -n VOLUME -f org.supercsv.cellprocessor.ParseDouble -l VOLUME
+        back
+    back
+add -t category -n flows
+view -n flows
+    add -t flow -n StockMarketPrediction
+    view -n StockMarketPrediction
+        add -n DateCleaner
+        view -n DateCleaner
+            assign -c Date
+            back
+        add -n MACDIndicator
+        view -n MACDIndicator
+            assign -c MACD
+            back
+        link -u DateCleaner -d MACDIndicator
+        view -u DateCleaner -d MACDIndicator
+            assign -c DirectPass
+            back
+        back
+    back
+add -t category -n senarios
+view -n senarios
+    add -t senario -n StockMarketPrediction
+    view -n StockMarketPrediction
+        assign -f StockMarketPrediction
+        set -n DateCleaner -f data/600000.csv -d StockHistoricalData
+        add -n MACDIndicator -f temp/MACd.csv
+        back
+    back
